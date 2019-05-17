@@ -1,0 +1,273 @@
+1.页面布局：
+浮动布局
+优点：兼容性好
+缺点：清除浮动 脱离文档流
+
+绝对定位布局
+优点：快捷 配合js
+缺点：已经脱离文档流 子元素也会脱离文档流 可使用性差
+
+flebox布局
+优点：基本现状都是这种 增加高度会自适应
+
+表格布局
+优点：兼容性好 增加高度会自适应
+缺点：会同时增高
+
+网格布局
+优点：代码少 新技术
+
+
+2.css盒模型：
+基本概念：标准模型 + IE模型
+
+两者区别：
+宽高计算方式不同 
+标准模型的宽高就是content的宽高 IE模式宽高是content+padding+border
+
+如何设置两种模型：
+box-sizing:content-box;
+box-sizing:border-box;
+
+JS如何获取盒模型的宽高：
+dom.style.width/height (内联样式取)
+dom.currentStyle.width/height (ie支持)
+window.getComputedStyle(dom).width/height (firefox/chrom支持)
+dom.getBoundingClientRect().width/height (计算绝对位置)
+
+3.BFC(边距重叠解决方法)：
+基本概念：块级格式化上下文
+
+原理：bfc元素的垂直方向的边距会发生重叠 bfc的区域不会与浮动元素的box重叠 bfc在页面上是一个浮动的容器，外面的元素不会影响里面的 计算bfc高度的时候浮动元素也会参与计算
+
+创建bfc：
+overflow:hidden/auto
+float的值不会none
+position的值fixed absoulate
+display：table/table-cell
+
+bfc使用场景：布局浮动(bfc不与float重叠)  bfc子元素是float也会参与计算（清除浮动）
+
+dom事件：
+dom事件级别：
+dom0 element.onclick=function(){}
+dom2 element.addEventListener('click'，function(){},false)
+dom3 element.addEventListener('keyup',function(){},false)
+
+dom事件模型:
+捕获和冒泡
+事件流：先捕获，然后到达目标元素（目标阶段），再上传到window对象（冒泡）
+捕获的流程：window-document-html-body-目标元素
+event对象的常见应用：enevt.preventDefault(); event.stopPropagation()阻止冒泡; enevt.stopImmediatePropagation(); event.currentTarget当前绑定的事件; event.target当前绑定的元素;
+
+自定义事件：
+var eve = new Event('costome');
+ev.addEventListener('custome',function(){
+	console.log('custome');
+});
+ev.dispatchEvent(eve);
+
+HTTP协议类：
+特点：简单快速 灵活 无连接 无状态
+报文：请求报文（请求行：http方法/页面地址/http协议和版本 请求头：key value值 空行：下一个 请求体）； 响应报文（状态行 响应头 空行 响应体）
+
+http方法：
+get：获取资源 post:传输资源 put:更新资源 delete:删除资源 head:获得报文首部
+
+post和get区别：
+get产生的url地址可以被收藏，post不可以
+get在浏览器回退是无害的，post会再次提交请求
+get请求会被浏览器主动缓存，post不会，除非手动设置
+get请求参数会完整保留在浏览器历史记录里，post不会
+get请求在url中传送的参数有长度限制，post没有
+get参数通过url传递，post放在request body中
+
+http状态码：
+1xx：指示信息-请求已接收
+2xx：成功-请求已被成功接收
+3xx：重定向-进行更进一步的操作
+4xx：客户端错误-请求有语法错误或请求无法实现
+5xx：服务器错误-服务器未能实现合法请求
+200 OK：客户端请求成功
+301 moved permanently：请求的页面已经转移到新url
+302 found：请求的页面已经临时转移到新url
+400 bad request：客户端请求有语法错误
+401 unauthorized：请求未经授权
+403 forbidden：请求页面被禁止
+404 not found：请求不存在
+500 internal server error：服务器错误
+503 server unavailable：请求未完成，服务器过载
+
+持久连接：
+http1.1版本支持 1.0不支持
+使用普通模式，每个请求/应答客户和服务器都要新建一个连接，完成之后立即断开（http协议为无连接协议）
+使用keep-alive模式，使客户端到服务器的连接持续有效，当出现后继请求时，keep-alive功能避免重新建立连接
+
+管线化：
+持久连接->请求1-响应1-请求2-响应2-请求3-响应3
+变成-> 请求1 -2 -3-响应1 -2 -3 请求打包回来
+get和head请求可以管线化，post有所限制
+
+原型链：
+创建对象方法：1.字面量
+var o1 = {name:'o1'};
+var o2 = new Object({name:'o2'});
+
+2.构造函数
+var M = function(name){this.name=name;};
+var o3 = new M('o3');
+
+3.Object.create
+var p = {name:'p'};
+var o4 = Oblect.create(p);
+
+_proto_（实例对象）-> instanceof -> prototype（构造函数） -> 原型
+                   -> constructor ->
+
+面向对象:
+类的声明：
+function Animal(){
+	this.name = 'name';
+}
+
+class Animal2 {
+	constructor(){
+		this.name = name;
+	}
+}
+实例化：
+console.log(new Animal(), new Animal2());
+
+构造函数实现继承：（部分继承）
+function Parent1(){
+	this.name = 'parent1';
+}
+function Child1(){
+	Parent1.call(this);
+	this.type = 'child1';
+}
+console.log(new Child1);
+
+原型链实现继承：
+function Parent2(){
+	this.name = 'parent2';
+}
+function Child2(){
+	this.type = 'child2';
+}
+Child2.prototype = new Parent2();
+console.log(new Child2());
+
+组合方式：
+function Parent3(){
+	this.name = 'parent3';
+	this.play = [1,2,3];
+}
+function Child3(){
+	Parent3.call(this);
+	this.type = 'child3';
+}
+Child3.prototype = Object.create(Parent3.prototype);
+Child3.prototype.constructor = Child3;
+var s3 = new Child3();
+console.log(s3.constructor;
+
+通信类：
+同源策略及限制：从一个源加载的文档或脚本如何与来自另一个源的资源进行交互，这是一个用于隔离潜在恶意文件的安全机制。
+源：协议 域名 端口 
+限制：cookie 、localstorage 、indexDB无法读取
+	  DOM无法获得
+	  ajax请求不能发送
+
+前后端如何通信: ajax/WebSocket/CORS
+
+创建ajax:
+XMLHttpRequest对象的工作流程
+兼容性处理
+事件的触发条件
+事件的触发顺序
+
+跨域通信的几种方式：
+JSONP/Hash/postMessage/WebSocket/CORS
+
+安全类：
+CSRF：跨站请求伪造
+攻击原理：网站接口存在漏洞 用户登录过
+防御措施：Token验证 Referer验证 隐藏令牌
+
+XSS：跨域脚本攻击
+攻击原理：页面注入js脚本 无需登录
+防御措施：让js不可执行
+
+算法类：
+快速排序 选择排序 希尔排序
+堆栈 队列 链表
+递归
+波兰式和逆波兰式
+
+渲染机制：
+DOCTYPE：用来声明文档类型和DTD规范的,文件的合法性验证
+<!DOCTYPE html>
+
+渲染过程：
+html生成DOM Tree，css生成cssom，两者合成attachment变成render tree,rendertree和layout进行painting，最后display
+
+重排reflow:
+计算将元素放在出现的地方，这个过程叫reflow
+触发reflow：
+修改css样式
+修改dom节点
+修改默认字体
+搞个动画
+
+重绘repaint:
+dom/css 改动
+
+js运行机制：
+js是单线程 一个时间只能做一件事
+setTimeout/setInterval dom事件 promise是异步任务 先同步任务后异步任务
+console.log('a');
+while(true){
+	//这是同步任务
+}
+console.log('b');
+答案是：a 
+
+for(var i=0, i<4, i++){
+	setTimeout(function(){
+		console.log(i);
+	},1000);
+}
+答案是：4 4 4 4 for循环结束的很快才执行计时器 异步队列放入的时间和执行时间
+
+页面性能类;
+资源压缩合并，减少http请求
+非核心代码异步加载
+利用浏览器缓存
+使用cdn
+预解析dns
+
+异步加载方式：
+动态脚本加载 /defer /async
+区别：
+defer是在html解析玩之后才执行，如果是多个按照加载顺序依次执行
+async是在加载完之后立即执行，如果是多个执行顺序和加载顺序无关
+
+浏览器缓存：
+强缓存：Expires(绝对时间) cache-control(相对时间) 都有以后者为准
+协商缓存：last-modified if-modified-since
+		 etag if-none-match
+
+前端错误分类：
+1.及时运行错误-代码错误
+2.资源加载错误
+
+捕获方式：
+1.try..catch /window.onerror
+2.object.onerror /performance.getEntries() /error事件捕获
+
+上报错误原理;
+采用ajax通信方式上报
+利用image对象上报 (new Image()).src = 'http://baidu.com/tesjk?r=tksjk';
+
+
